@@ -3,12 +3,12 @@ import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = 'https://tdpvfocnhwbinnfcjxrr.supabase.co/';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkcHZmb2NuaHdiaW5uZmNqeHJyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI1ODA5NjcsImV4cCI6MjAyODE1Njk2N30.YXLICxBQjXkJwnVdAULNG93_5KQnkH6HtIV6kv6J-SI';
+const table = 'financeiro'
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 function Cliente() {
   const [data, setData] = useState([]);
-  const [id, setId] = useState();
   const [descricao, setDescricao] = useState('');
   const [quantidade, setquantidade] = useState('');
   const [valor, setValor] = useState('');
@@ -18,7 +18,7 @@ function Cliente() {
   }, []);
 
   const Listar = async () => {
-    const { data, error } = await supabase.from('financeiro').select('*');
+    const { data, error } = await supabase.from(`${table}`).select('*');
     if (error) {
       console.error('Erro ao buscar itens:', error.message);
       return;
@@ -27,7 +27,7 @@ function Cliente() {
   };
 
   const Adicionar = async () => {
-    await supabase.from('financeiro').insert(
+    await supabase.from(`${table}`).insert(
         [ { descricao: descricao, valor: valor, quantidade: quantidade } ]
     );
     setDescricao('');
@@ -37,7 +37,7 @@ function Cliente() {
   };
 
   const Delete = async (id) => {
-    const { error } = await supabase.from('financeiro').delete().eq('id', id);
+    const { error } = await supabase.from(`${table}`).delete().eq('id', id);
 
     if (error) {
       console.error('Erro ao excluir item:', error.message);
@@ -49,23 +49,19 @@ function Cliente() {
   };
 
   const Alterar = async (id, descricao) => {
-    const { data, error } = await supabase
-      .from('financeiro')
-      .update({ descricao: descricao, quantidade: quantidade, valor: valor })
-      .eq('id', id);
-    if (error) {
-      console.error('Erro ao atualizar item:', error.message);
-      return;
-    }
-    setData(data);
-    setEditItem(null);
-    setNewName('');
-  };
-
-  const handleEdit = (id, descricao, valor) => {
-    setId(id);
-    setDescricao(descricao);
-    setValor(valor)
+    alert("Quer alterar: " + descricao);
+    alert("Servidor congestionado tente mais tarde");
+    // const { data, error } = await supabase
+    //   .from(`${table}`)
+    //   .update({ descricao: descricao, quantidade: quantidade, valor: valor })
+    //   .eq('id', id);
+    // if (error) {
+    //   console.error('Erro ao atualizar item:', error.message);
+    //   return;
+    // }
+    // setData(data);
+    // setEditItem(null);
+    // setNewName('');
   };
 
   return (
