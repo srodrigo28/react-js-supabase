@@ -8,6 +8,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 function Cliente() {
   const [data, setData] = useState([]);
+  const [id, setId] = useState();
   const [descricao, setDescricao] = useState('');
   const [quantidade, setquantidade] = useState('');
   const [valor, setValor] = useState('');
@@ -48,8 +49,24 @@ function Cliente() {
   };
 
   const Alterar = async (id, descricao) => {
-    alert("Alterar " + descricao)
-  }
+    const { data, error } = await supabase
+      .from('financeiro')
+      .update({ descricao: descricao, quantidade: quantidade, valor: valor })
+      .eq('id', id);
+    if (error) {
+      console.error('Erro ao atualizar item:', error.message);
+      return;
+    }
+    setData(data);
+    setEditItem(null);
+    setNewName('');
+  };
+
+  const handleEdit = (id, descricao, valor) => {
+    setId(id);
+    setDescricao(descricao);
+    setValor(valor)
+  };
 
   return (
     <div className='container'>
@@ -102,7 +119,7 @@ function Cliente() {
               <td>{item.quantidade}</td>
               <td>{item.valor}</td>
               <td className='d-flex gap-1'>
-                <button className='btn btn-primary' onClick={() => Alterar(item.id, item.descricao)}>Edit</button>
+                <button className='btn btn-primary' onClick={() => Alterar(item.id, item.descricao, item.valor)}>Edit</button>
                 <button className='btn btn-danger' onClick={() => Delete(item.id)}>X</button>  
               </td>
             </tr>
